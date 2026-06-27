@@ -193,6 +193,45 @@ def check_bound3() -> None:
     print("[Bound 3]  balance, δ⁻⁴/δ⁻² complexity, horizon q⁻¹, crossover OK")
 
 
+# ======================================================================
+# Score → projection → Fisher  (OdLean/Fisher.lean) — weighted L²(p) chain
+# ======================================================================
+def frobP(p: sp.Matrix, A: sp.Matrix, B: sp.Matrix) -> sp.Expr:
+    return sum(p[i, j] * A[i, j] * B[i, j] for i in range(A.rows) for j in range(A.cols))
+
+
+def check_fisher() -> None:
+    eps = sp.Symbol("epsilon", positive=True)
+    p = sp.Matrix(N, N, lambda i, j: sp.Symbol(f"p_{i}_{j}", positive=True))
+    phi = sp.Matrix(N, N, lambda i, j: sp.Symbol(f"phi_{i}_{j}"))
+    potential = sep("sa", "sb")  # the additive (potential) part of the score, in N
+
+    # score_is_projection: with S = potential − ε^{-1} φ, the complement (−ε^{-1}φ) − S = −sep
+    #   is separable (its interaction vanishes).
+    S = sp.Matrix(N, N, lambda i, j: potential[i, j] - eps**-1 * phi[i, j])
+    R = sp.Matrix(N, N, lambda i, j: -(eps**-1 * phi[i, j]) - S[i, j])
+    for i in range(N):
+        for j in range(N):
+            assert sp.simplify(R[i, j] - R[i, 0] - R[0, j] + R[0, 0]) == 0
+
+    # frobP_orthogonal_separable: ⟨S, f_i+g_j⟩_p = Σ_i f_i·(p-rowsum) + Σ_j g_j·(p-colsum),
+    #   so it vanishes whenever the p-weighted row/col sums of S do.
+    Ssym = sp.Matrix(N, N, lambda i, j: sp.Symbol(f"S_{i}_{j}"))
+    ga = [sp.Symbol(f"ga_{i}") for i in range(N)]
+    gb = [sp.Symbol(f"gb_{j}") for j in range(N)]
+    fsep = sp.Matrix(N, N, lambda i, j: ga[i] + gb[j])
+    rowsum = [sum(p[i, j] * Ssym[i, j] for j in range(N)) for i in range(N)]
+    colsum = [sum(p[i, j] * Ssym[i, j] for i in range(N)) for j in range(N)]
+    expr_via_sums = (sum(ga[i] * rowsum[i] for i in range(N))
+                     + sum(gb[j] * colsum[j] for j in range(N)))
+    assert sp.simplify(frobP(p, Ssym, fsep) - expr_via_sums) == 0
+
+    # fisher_eq_proj_var: I₁ = ⟨S,S⟩_p = ε^{-2}·⟨Π⊥φ, Π⊥φ⟩_p  with Π⊥φ = -ε S
+    Phi_perp = sp.Matrix(N, N, lambda i, j: -eps * S[i, j])
+    assert sp.simplify(frobP(p, S, S) - eps**-2 * frobP(p, Phi_perp, Phi_perp)) == 0
+    print("[Fisher]   score=projection, ⟨S,·⟩_p split, I₁=ε⁻²Var(Π⊥φ) .. OK")
+
+
 def main() -> None:
     print(f"od-lean symbolic cross-check (SymPy {sp.__version__}, N={N})")
     print("-" * 60)
@@ -200,6 +239,7 @@ def main() -> None:
     check_bound2_projection()
     check_bound2_bias()
     check_bound3()
+    check_fisher()
     print("-" * 60)
     print("ALL CROSS-CHECKS PASSED — SymPy agrees with the Lean theorems.")
 

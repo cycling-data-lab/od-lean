@@ -87,6 +87,29 @@ that decides *which censoring hurts* — is proved from first principles in pure
 algebra. No optimal-transport or measure theory is invoked: the bound's content is the
 linear algebra of the interaction subspace.
 
+## Score → projection → Fisher: the Bound 1 ↔ Bound 2 bridge (`OdLean/Fisher.lean`)
+
+The SI B derivation linking the two bounds: for the calibrated Gibbs model the efficient
+score is `∂_θ log p_θ = −ε⁻¹·Π_⊥^{(p)} φ`, so `I₁ = ε⁻²·Var_{p}(Π_⊥^{(p)} φ)` — the **same**
+interaction projection as Bound 2's gauge, now in the `p_θ`-weighted inner product. This
+*derives* the inputs `OdLean/Basic.lean` (Bound 1) took as hypotheses. The measure-theoretic
+facts (the differentiated margin constraints; the score's separable potential part) are
+isolated as hypotheses; the rest is the algebra of the weighted projection.
+
+| Lean name | Content |
+|---|---|
+| `OD.frobP` | the `L²(p)`-weighted inner product `⟨A,B⟩_p = Σ p_{ij} A_{ij} B_{ij}` |
+| `OD.frobP_orthogonal_separable` | margin constraints ⟹ the score is `p`-orthogonal to every station effect |
+| `OD.proj_unique` | the `p`-orthogonal representative mod `𝒩` is **unique** (`p > 0`) |
+| `OD.score_is_projection`, `OD.score_unique` | hence `S = −ε⁻¹·Π_⊥^{(p)} φ`, the unique efficient score |
+| `OD.score_mean_zero` | `E_p[S] = 0`, so `I₁ = ⟨S,S⟩_p` is genuinely the score variance |
+| `OD.fisher_eq_proj_var` | `I₁ = ε⁻²·⟨Π_⊥φ, Π_⊥φ⟩_p` (the paper's `I₁ = ε⁻² Var_p(Π_⊥φ)`) |
+| `OD.fisher_pos_iff` | `I₁ > 0 ⟺ S ≠ 0` — projected-feature non-degeneracy |
+| `OD.fisher_pos_gives_info_pos` | **bridge**: feeds the *derived* `I₁ > 0` into Bound 1's `info_pos_iff` |
+
+This is the `p`-weighted companion of Bound 2's unweighted centring `Π_{𝒩^⊥}`: it closes the
+loop from the GBFS likelihood to the inputs of Bound 1.
+
 ## Bound 3 — the collection-horizon law (`OdLean/Bound3.lean`)
 
 The single genuinely analytic input — the **entropic-OT sample-complexity** `O(ε⁻¹n⁻¹ᐟ²)` of
@@ -121,6 +144,13 @@ optimal-transport theory is invoked — only the algebra of the horizon.
 'OD.sandwich_scales'          depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.sandwich_antitone_q'      depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.sandwich_diverges'        depends on axioms: [propext, Classical.choice, Quot.sound]
+-- Score → projection → Fisher (Bound 1 ↔ Bound 2 bridge)
+'OD.frobP_orthogonal_separable'  depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.proj_unique'                 depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.score_unique'                depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.fisher_eq_proj_var'          depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.fisher_pos_iff'              depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.fisher_pos_gives_info_pos'   depends on axioms: [propext, Classical.choice, Quot.sound]
 -- Bound 2
 'OD.center_separable'         depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.center_add_separable'     depends on axioms: [propext, Classical.choice, Quot.sound]
