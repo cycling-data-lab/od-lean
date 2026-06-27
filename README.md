@@ -1,7 +1,7 @@
 # od-lean — Lean 4 formalisation of the OD identifiability bounds
 
 Machine-checked (Lean 4 + Mathlib) formalisation of the theoretical content of
-[**`gbfs-od-reconstruction`**](../gbfs-od-reconstruction) (Fossé–Pallares, *Standard
+[**`gbfs-od-reconstruction`**](https://github.com/cycling-data-lab/gbfs-od-reconstruction) (Fossé–Pallares, *Standard
 compliance bounds origin–destination identifiability in GBFS bike-sharing feeds*) — the
 companion proof artifact to that manuscript, living alongside it in `cycling-data-lab`:
 
@@ -20,8 +20,8 @@ All are formalised **with zero `sorry`**, depending only on the three standard L
 
 The formalisation certifies the **deductive content** of each result — the algebra and the
 deterministic consequences — taking the genuinely analytic / statistical inputs as explicit
-hypotheses (as the paper does). The map to `../gbfs-od-reconstruction` (`paper.tex` /
-`paper_si.tex`):
+hypotheses (as the paper does). The map to the manuscript (`paper.tex` / `paper_si.tex` in
+[`gbfs-od-reconstruction`](https://github.com/cycling-data-lab/gbfs-od-reconstruction)):
 
 | Manuscript result | Lean file | Key theorem(s) |
 |---|---|---|
@@ -50,7 +50,7 @@ conditions, and the Gibbs/Sinkhorn structural model. See *Not formalised here* b
 | `OD.sandwich_q_inv` | **Misspecification-robust**: the Huber–White sandwich `A⁻¹BA⁻¹/n_eff` also factors as `(const)·q⁻¹` — the `q⁻¹` survives a wrong model, only the constant differs |
 | `OD.sandwich_scales`, `OD.sandwich_antitone_q`, `OD.sandwich_diverges` | the misspecified variance scales/diverges in `q` exactly as the well-specified floor |
 
-Architecture (mirroring [`sbf-lean`](../../sbf-lean)): the **statistical inputs** are taken as
+Architecture (mirroring `sbf-lean`): the **statistical inputs** are taken as
 hypotheses / definitions, exactly as the paper states them — the tracked micro-channel's
 Fisher information is **linear in the identifier-persistence rate**, `info q = q · I₁` with
 `I₁ > 0`, and the **Cramér–Rao** inequality `Var ≥ 1/info q`. The **deterministic
@@ -102,7 +102,7 @@ the **separable subspace** `𝒩 = {(i,j) ↦ fᵢ + gⱼ}` of additive station 
 | `OD.bias_cancels_separable` | **Station-emptiness cancels**: separable `S = aᵢbⱼ` is asymptotically unbiased on the interaction |
 | `OD.bias_attenuation` | **Polling aliasing attenuates**: duration-dependent `S` scales the cost by `1 − εητ < 1` |
 
-Architecture (mirroring [`sbf-lean`](../../sbf-lean)'s `bessel`/`starProjection` split): the
+Architecture (mirroring `sbf-lean`'s `bessel`/`starProjection` split): the
 **statistical inputs** — consistency of the empirical coupling and the Gibbs/Sinkhorn form —
 enter only as the separable calibration/normaliser term `D` in `bias_decomposition`, exactly
 as the paper states them. The **deterministic content** — the gauge algebra, the projection
@@ -244,10 +244,10 @@ Toolchain: Lean `v4.31.0` (see `lean-toolchain`), Mathlib pinned in `lake-manife
 
 ## Siblings
 
-- [`../gbfs-od-reconstruction`](../gbfs-od-reconstruction) — **the manuscript this verifies**
+- [`../gbfs-od-reconstruction`](https://github.com/cycling-data-lab/gbfs-od-reconstruction) — **the manuscript this verifies**
   (paper + experiments d01–d14); this repo is its formal-proof companion.
-- [`../structural-bounds-framework`](../structural-bounds-framework) — the SBF manuscript,
+- [`../structural-bounds-framework`](https://github.com/cycling-data-lab/structural-bounds-framework) — the SBF manuscript,
   whose Theorem 1 is formalised in `sbf-lean`.
-- [`sbf-lean`](../../sbf-lean) — the same finite-algebra-core formalisation style applied to
+- `sbf-lean` — the same finite-algebra-core formalisation style applied to
   the structural-bounds-framework universal spectral lower bound (Theorem 1); shares the
   Mathlib olean cache (identical pin).
