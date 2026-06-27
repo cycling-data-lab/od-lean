@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+message: "If you use this formalisation or the accompanying manuscript, please cite as below."
+title: "od-lean: machine-checked Lean 4 formalisation of the GBFS OD identifiability bounds"
+type: software
+version: "0.1-draft"
+date-released: "2026-06-27"
+authors:
+  - family-names: "Fossé"
+    given-names: "Rohan"
+    orcid: "https://orcid.org/0009-0002-2195-0198"
+    affiliation: "CESI Engineering School, Montpellier, France"
+    email: "rfosse@cesi.fr"
+  - family-names: "Pallares"
+    given-names: "Gaël"
+    orcid: "https://orcid.org/0009-0002-8680-604X"
+    affiliation: "CESI LINEACT (EA 7527), Montpellier, France"
+repository-code: "https://github.com/cycling-data-lab/od-lean"
+url: "https://github.com/cycling-data-lab/od-lean"
+license: MIT
+keywords:
+  - "Lean 4"
+  - "Mathlib"
+  - "formal verification"
+  - "interactive theorem proving"
+  - "Cramér–Rao bound"
+  - "entropic optimal transport"
+  - "GBFS"
+  - "origin–destination reconstruction"
+abstract: >-
+  A Lean 4 / Mathlib formalisation of the theoretical content of the manuscript
+  "Standard compliance bounds origin–destination identifiability in GBFS
+  bike-sharing feeds" (Fossé and Pallares). The deductive content of all three
+  bounds is machine-checked with zero `sorry`, depending only on the three
+  standard Lean axioms: Bound 1, the q⁻¹ Cramér–Rao information limit (with the
+  Cramér–Rao step itself discharged from Cauchy–Schwarz, the score/Fisher
+  derivation, and a misspecification-robustness sandwich result); Bound 2, the
+  bias structure as the algebra of the two-way-centring projection onto the
+  interaction subspace; and Bound 3, the collection-horizon law (the δ⁻⁴/δ⁻²
+  exponents and the q⁻¹ horizon scaling). The genuinely analytic inputs — the
+  entropic-OT sample-complexity rate, the Cramér–Rao regularity conditions, and
+  the Gibbs/Sinkhorn structural model — are isolated as explicit hypotheses, as
+  in the paper. A SymPy cross-check re-derives the closed forms independently.
+preferred-citation:
+  type: article
+  title: "Standard compliance bounds origin–destination identifiability in GBFS bike-sharing feeds: a cost-learning and sampling-horizon analysis"
+  authors:
+    - family-names: "Fossé"
+      given-names: "Rohan"
+      orcid: "https://orcid.org/0009-0002-2195-0198"
+    - family-names: "Pallares"
+      given-names: "Gaël"
+      orcid: "https://orcid.org/0009-0002-8680-604X"
+  journal: "Computer Standards & Interfaces"
+  year: 2026
+  notes: "In preparation; preprint and experiments at https://github.com/cycling-data-lab/gbfs-od-reconstruction"

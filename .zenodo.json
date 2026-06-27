@@ -1,0 +1,39 @@
+{
+  "title": "od-lean: machine-checked Lean 4 formalisation of the GBFS OD identifiability bounds",
+  "description": "Lean 4 / Mathlib formal-proof companion to the manuscript 'Standard compliance bounds origin–destination identifiability in GBFS bike-sharing feeds' (R. Fossé and G. Pallares, in preparation for Computer Standards & Interfaces). The deductive content of all three bounds is machine-checked with zero 'sorry', depending only on the three standard Lean axioms (propext, Classical.choice, Quot.sound): (i) Bound 1, the q⁻¹ Cramér–Rao information limit, with the Cramér–Rao inequality itself discharged from Cauchy–Schwarz on Mathlib's covariance/variance, the score = −ε⁻¹·Π⊥φ / Fisher = ε⁻²·Var(Π⊥φ) derivation, and a Huber–White sandwich proving the q⁻¹ law survives model misspecification; (ii) Bound 2, the bias structure as the algebra of the two-way-centring orthogonal projection off the additive station-effect subspace (gauge freedom, bias = non-separable log-selection, the censoring-vs-aliasing dichotomy); (iii) Bound 3, the collection-horizon law (bias–variance balance giving the δ⁻⁴/δ⁻² exponents, the minimal horizon T* and its q⁻¹ scaling, the regime crossover). The genuinely analytic inputs — the entropic-OT sample-complexity rate (Genevay; Mena–Niles-Weed), the Cramér–Rao regularity conditions, and the Gibbs/Sinkhorn structural model — are isolated as explicit hypotheses. A SymPy script cross-checks the closed forms independently of Lean.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "Lean 4",
+    "Mathlib",
+    "formal verification",
+    "interactive theorem proving",
+    "Cramér–Rao bound",
+    "entropic optimal transport",
+    "GBFS",
+    "origin–destination reconstruction"
+  ],
+  "creators": [
+    {
+      "name": "Fossé, Rohan",
+      "affiliation": "CESI Engineering School, Montpellier, France",
+      "orcid": "0009-0002-2195-0198"
+    },
+    {
+      "name": "Pallares, Gaël",
+      "affiliation": "CESI LINEACT (EA 7527), Montpellier, France",
+      "orcid": "0009-0002-8680-604X"
+    }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/cycling-data-lab/gbfs-od-reconstruction",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "publication-article"
+    }
+  ],
+  "language": "eng",
+  "notes": "Formal-proof companion to the Computer Standards & Interfaces submission. Toolchain: Lean v4.31.0, Mathlib pinned in lake-manifest.json. Build: lake exe cache get && lake build. The .lake build directory is not included; oleans regenerate from the pinned Mathlib."
+}
