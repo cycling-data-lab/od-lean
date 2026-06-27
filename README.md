@@ -23,6 +23,8 @@ All are formalised **with zero `sorry`**, depending only on the three standard L
 | `OD.cr_bound_antitone` | The floor grows as persistence shrinks |
 | `OD.cr_bound_gt` | The floor exceeds any threshold for small enough `q` — **divergence** as `q → 0` |
 | `OD.var_ge_q_inv` | End-to-end: under Cramér–Rao, `Var ≥ (1/I₁)·q⁻¹` |
+| `OD.sandwich_q_inv` | **Misspecification-robust**: the Huber–White sandwich `A⁻¹BA⁻¹/n_eff` also factors as `(const)·q⁻¹` — the `q⁻¹` survives a wrong model, only the constant differs |
+| `OD.sandwich_scales`, `OD.sandwich_antitone_q`, `OD.sandwich_diverges` | the misspecified variance scales/diverges in `q` exactly as the well-specified floor |
 
 Architecture (mirroring [`sbf-lean`](../sbf-lean)): the **statistical inputs** are taken as
 hypotheses / definitions, exactly as the paper states them — the tracked micro-channel's
@@ -115,6 +117,10 @@ optimal-transport theory is invoked — only the algebra of the horizon.
 'OD.cr_bound_antitone'        depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.cr_bound_gt'              depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.var_ge_q_inv'             depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.sandwich_q_inv'           depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.sandwich_scales'          depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.sandwich_antitone_q'      depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.sandwich_diverges'        depends on axioms: [propext, Classical.choice, Quot.sound]
 -- Bound 2
 'OD.center_separable'         depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.center_add_separable'     depends on axioms: [propext, Classical.choice, Quot.sound]

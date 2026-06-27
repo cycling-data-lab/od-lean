@@ -43,7 +43,16 @@ def check_bound1() -> None:
 
     # var_ge_q_inv : under hcr (1/info <= Var), the bound reads (1/I1) q^{-1} <= Var
     #   — same expression as cr_bound_q_inv, already checked above.
-    print("[Bound 1]  q^{-1} law, antitonicity, divergence ............ OK")
+
+    # Misspecification sandwich: sandwichVar = A^{-1} B A^{-1} / n_eff, n_eff = R q T.
+    #   sandwich_q_inv : = (A^{-1} B A^{-1} / (R T)) * q^{-1}  (q^{-1} survives misspec.)
+    A, Bc, R, Tt = sp.symbols("A B_c R T", positive=True)
+    sandwich = (A**-1 * Bc * A**-1) / (R * q * Tt)
+    assert sp.simplify(sandwich - (A**-1 * Bc * A**-1 / (R * Tt)) * q**-1) == 0
+    #   sandwich_scales : sandwich(q) = sandwich(q=1) * q^{-1}  (model-independent shape)
+    sandwich_1 = (A**-1 * Bc * A**-1) / (R * Tt)
+    assert sp.simplify(sandwich - sandwich_1 * q**-1) == 0
+    print("[Bound 1]  q^{-1} law, antitonicity, divergence, sandwich .. OK")
 
 
 # ======================================================================
