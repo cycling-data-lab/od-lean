@@ -139,12 +139,58 @@ def check_bound2_bias() -> None:
     print("[Bound 2]  bias = non-separable log-selection; cancel/attenuate OK")
 
 
+# ======================================================================
+# Bound 3 — collection-horizon law  (OdLean/Bound3.lean)
+# ======================================================================
+def check_bound3() -> None:
+    # entropic_balance / entropic_balance_eq : ε + V/ε ≥ 2√V, attained at ε = √V
+    V, eps = sp.symbols("V epsilon", positive=True)
+    err = eps + V / eps
+    # stationary point and minimum value
+    eps_star = sp.solve(sp.diff(err, eps), eps)
+    eps_star = [s for s in eps_star if s.is_positive][0]
+    assert sp.simplify(eps_star - sp.sqrt(V)) == 0
+    assert sp.simplify(err.subs(eps, sp.sqrt(V)) - 2 * sp.sqrt(V)) == 0
+    # global lower bound: err - 2√V = (√ε - √(V/ε))² ≥ 0
+    assert sp.simplify((err - 2 * sp.sqrt(V)) - (sp.sqrt(eps) - sp.sqrt(V / eps)) ** 2) == 0
+
+    # sample_complexity_quartic : achievable accuracy 2√(B/√n) = 2√B·n^{-1/4}
+    #   reaching δ needs n ≥ 16 B² δ^{-4}
+    B, delta, n = sp.symbols("B delta n", positive=True)
+    acc = 2 * sp.sqrt(B / sp.sqrt(n))
+    assert sp.simplify(acc - 2 * sp.sqrt(B) * n ** sp.Rational(-1, 4)) == 0
+    n_req4 = sp.solve(sp.Eq(acc, delta), n)[0]            # n at which accuracy = δ
+    assert sp.simplify(n_req4 - 16 * B**2 / delta**4) == 0
+
+    # sample_complexity_quadratic : dock rate C·n^{-1/2}, reaching δ needs n ≥ C² δ^{-2}
+    C = sp.Symbol("C", positive=True)
+    n_req2 = sp.solve(sp.Eq(C / sp.sqrt(n), delta), n)[0]
+    assert sp.simplify(n_req2 - C**2 / delta**2) == 0
+
+    # horizon: nEff = R q T ; Tstar = Φ / (R q) ; Tstar = (Φ/R)·q^{-1}
+    R, q, T, Phi = sp.symbols("R q T Phi", positive=True)
+    Tstar = Phi / (R * q)
+    assert sp.simplify(Tstar - (Phi / R) * q**-1) == 0           # q^{-1} law
+    assert sp.simplify(sp.solve(sp.Eq(Phi, R * q * T), T)[0] - Tstar) == 0  # feasibility
+    # free-floating capstone: Tstar(16B²/δ⁴) = 16B²/(R δ⁴) · q^{-1}
+    Tstar_free = (16 * B**2 / delta**4) / (R * q)
+    assert sp.simplify(Tstar_free - (16 * B**2 / (R * delta**4)) * q**-1) == 0
+
+    # regime crossover: K²/δ² < C₄/δ⁴  ⟺  K²δ² < C₄  ⟺ K < √C₄/δ
+    C4, K = sp.symbols("C_4 K", positive=True)
+    lhs = sp.simplify((K**2 / delta**2 < C4 / delta**4))
+    # equivalent cross-multiplied form on the positive orthant
+    assert sp.simplify((C4 / delta**4 - K**2 / delta**2) * delta**4 - (C4 - K**2 * delta**2)) == 0
+    print("[Bound 3]  balance, δ⁻⁴/δ⁻² complexity, horizon q⁻¹, crossover OK")
+
+
 def main() -> None:
     print(f"od-lean symbolic cross-check (SymPy {sp.__version__}, N={N})")
     print("-" * 60)
     check_bound1()
     check_bound2_projection()
     check_bound2_bias()
+    check_bound3()
     print("-" * 60)
     print("ALL CROSS-CHECKS PASSED — SymPy agrees with the Lean theorems.")
 

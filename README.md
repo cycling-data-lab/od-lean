@@ -8,8 +8,11 @@ results of *gbfs-od-reconstruction* (Fossé–Pallares):
 - **Bound 2** — the structure of observation bias: *the cost is identifiable only modulo
   additive station effects, and the bias is the non-separable part of the log-selection, so
   station-emptiness censoring cancels while `60`-second polling does not* (`OdLean/Bias.lean`).
+- **Bound 3** — the collection-horizon law: *how long a feed must be polled to reconstruct
+  the OD to a target accuracy, per system type (`δ⁻⁴` free-floating vs `δ⁻²` dock), and why
+  the horizon carries the same `q⁻¹`* (`OdLean/Bound3.lean`).
 
-Both are formalised **with zero `sorry`**, depending only on the three standard Lean axioms.
+All are formalised **with zero `sorry`**, depending only on the three standard Lean axioms.
 
 ## Bound 1 — the `q⁻¹` information limit (`OdLean/Basic.lean`)
 
@@ -82,6 +85,27 @@ that decides *which censoring hurts* — is proved from first principles in pure
 algebra. No optimal-transport or measure theory is invoked: the bound's content is the
 linear algebra of the interaction subspace.
 
+## Bound 3 — the collection-horizon law (`OdLean/Bound3.lean`)
+
+The single genuinely analytic input — the **entropic-OT sample-complexity** `O(ε⁻¹n⁻¹ᐟ²)` of
+Genevay et al. / Mena–Niles-Weed (well beyond current Mathlib) — is **isolated as a
+hypothesis**: it appears only as the variance term of the plug-in error budget
+`err(ε) = ε + B·ε⁻¹·n⁻¹ᐟ²`. Everything we contribute is then deterministic real analysis.
+
+| Lean name | Paper content |
+|---|---|
+| `OD.entropic_balance` (+`_eq`) | **bias–variance balance**: `ε + V/ε ≥ 2√V`, attained at `ε = √V` |
+| `OD.sample_complexity_quartic` | **free-floating `δ⁻⁴`**: reaching accuracy `δ` needs `n ≥ 16B²·δ⁻⁴` |
+| `OD.sample_complexity_quadratic` | **dock `δ⁻²`**: the finite-`K` rate needs `n ≥ C²·δ⁻²` |
+| `OD.horizon_min` | the **minimal horizon** `T⋆ = Φ/(R q)` is exactly the feasibility threshold |
+| `OD.Tstar_q_inv`, `OD.Tstar_antitone_q` | `T⋆ ∝ q⁻¹`: the horizon inherits Bound 1's persistence law |
+| `OD.regime_crossover` | docks beat free-floating iff `K²δ² < C₄` — crossover `K⋆ ∝ δ⁻¹` |
+| `OD.Tstar_free_scaling` | **capstone**: `T⋆ = 16B²·(R δ⁴)⁻¹·q⁻¹` — the `q⁻¹·δ⁻⁴` collection cost |
+
+The `δ⁻⁴` exponent emerges *only* from balancing the isolated OT variance against the
+entropic bias (AM–GM); the `q⁻¹` is the same estimator-free factor as Bound 1. No
+optimal-transport theory is invoked — only the algebra of the horizon.
+
 ## Sorry-free certificate
 
 ```text
@@ -104,6 +128,15 @@ linear algebra of the interaction subspace.
 'OD.covariance_sq_le_variance_mul_variance'    depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.cramer_rao_variance'                       depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.var_ge_q_inv_of_score'                     depends on axioms: [propext, Classical.choice, Quot.sound]
+-- Bound 3
+'OD.entropic_balance'                          depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.sample_complexity_quartic'                 depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.sample_complexity_quadratic'               depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.horizon_min'                               depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.Tstar_q_inv'                               depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.Tstar_antitone_q'                          depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.regime_crossover'                          depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.Tstar_free_scaling'                        depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 Only the three standard Lean axioms — **no `sorryAx`**.
@@ -138,10 +171,11 @@ Toolchain: Lean `v4.31.0` (see `lean-toolchain`), Mathlib pinned in `lake-manife
 
 ## Not formalised here
 
-- **Bound 3** (estimator collection-horizon rate `δ⁻⁴` free-floating / `δ⁻²·K²` dock). A
-  genuine sample-complexity rate for entropic optimal transport (Genevay,
-  Mena–Niles-Weed) — analytic, beyond current Mathlib. This is the analogue of
-  `sbf-lean`'s pending Theorem 2 (concentration) / Theorem 3 (Berry–Esseen).
+- The **entropic-OT sample-complexity rate** itself — the `O(ε⁻¹n⁻¹ᐟ²)` plug-in error of
+  Genevay et al. / Mena–Niles-Weed that feeds `Bound3`'s error budget — is an isolated
+  hypothesis, not proved here: it is a deep analytic result beyond current Mathlib (the
+  analogue of `sbf-lean`'s pending Theorem 2/3). `Bound3` proves everything *downstream* of
+  it: the balancing, the `δ⁻⁴`/`δ⁻²` exponents, and the `q⁻¹` horizon law.
 - The *regularity conditions* feeding `cramer_rao_variance` — the unit score covariance
   `cov[T,S] = 1` (differentiation under the integral) and the Fisher information realised as
   the score variance `Var[S] = q·I₁` — are taken as hypotheses. They are the standard
