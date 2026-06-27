@@ -244,10 +244,10 @@ Toolchain: Lean `v4.31.0` (see `lean-toolchain`), Mathlib pinned in `lake-manife
 
 ## Siblings
 
-- [`../gbfs-od-reconstruction`](https://github.com/cycling-data-lab/gbfs-od-reconstruction) — **the manuscript this verifies**
+- [`gbfs-od-reconstruction`](https://github.com/cycling-data-lab/gbfs-od-reconstruction) — **the manuscript this verifies**
   (paper + experiments d01–d14); this repo is its formal-proof companion.
-- [`../structural-bounds-framework`](https://github.com/cycling-data-lab/structural-bounds-framework) — the SBF manuscript,
+- [`structural-bounds-framework`](https://github.com/cycling-data-lab/structural-bounds-framework) — the SBF manuscript,
   whose Theorem 1 is formalised in `sbf-lean`.
-- `sbf-lean` — the same finite-algebra-core formalisation style applied to
-  the structural-bounds-framework universal spectral lower bound (Theorem 1); shares the
-  Mathlib olean cache (identical pin).
+- [`sbf-lean`](https://github.com/cycling-data-lab/sbf-lean) — the same finite-algebra-core
+  formalisation style applied to the structural-bounds-framework universal spectral lower
+  bound (Theorem 1); shares the Mathlib olean cache (identical pin).
