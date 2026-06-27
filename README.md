@@ -1,5 +1,10 @@
 # od-lean — Lean 4 formalisation of the OD identifiability bounds
 
+[![CI](https://github.com/cycling-data-lab/od-lean/actions/workflows/ci.yml/badge.svg)](https://github.com/cycling-data-lab/od-lean/actions/workflows/ci.yml)
+[![Lean 4 + Mathlib](https://img.shields.io/badge/Lean%204-Mathlib-blue.svg)](https://leanprover-community.github.io/)
+[![proof: machine-checked](https://img.shields.io/badge/proof-machine--checked%20(zero%20sorry)-success.svg)](#sorry-free-certificate)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 Machine-checked (Lean 4 + Mathlib) formalisation of the theoretical content of
 [**`gbfs-od-reconstruction`**](https://github.com/cycling-data-lab/gbfs-od-reconstruction) (Fossé–Pallares, *Standard
 compliance bounds origin–destination identifiability in GBFS bike-sharing feeds*) — the
