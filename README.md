@@ -28,7 +28,27 @@ Fisher information is **linear in the identifier-persistence rate**, `info q = q
 consequences** (the `q⁻¹` divergence and the `q = 0` non-identifiability) are then pure
 finite real algebra. No probability theory is invoked: the bound's content is the algebra
 of the information limit, with the measure-theoretic Cramér–Rao step isolated as the input
-`hcr`.
+`hcr` — itself **discharged** in `OdLean/CramerRao.lean` (below).
+
+## The Cramér–Rao step, discharged (`OdLean/CramerRao.lean`)
+
+Bound 1 takes the Cramér–Rao inequality `Var ≥ 1/info` as the hypothesis `hcr` — its only
+measure-theoretic step. That step is **derived from first principles**, so the `q⁻¹` law
+rests on genuinely statistical inputs rather than an assumed inequality. The content of
+Cramér–Rao is one application of **Cauchy–Schwarz** to estimator and score, plus the algebra
+of the resulting quadratic, given in two layers (abstract core + honest instantiation):
+
+| Lean name | Statement |
+|---|---|
+| `OD.cramer_rao_inner` | **Abstract core**: in any real inner-product space, `⟪T,S⟫ = 1`, `⟪S,S⟫ = I > 0` ⟹ `⟪T,T⟫ ≥ 1/I` (pure Cauchy–Schwarz) |
+| `OD.covariance_sq_le_variance_mul_variance` | **Covariance Cauchy–Schwarz** for `ProbabilityTheory` random variables, via the nonnegative-quadratic / discriminant argument |
+| `OD.cramer_rao_variance` | **Measure-theoretic Cramér–Rao**: `cov[T,S] = 1`, `Var[S] = I > 0` ⟹ `Var[T] ≥ 1/I` |
+| `OD.var_ge_q_inv_of_score` | **Capstone**: with `Var[S] = q·I₁`, `Var[T] ≥ (1/I₁)·q⁻¹` — Bound 1's `q⁻¹` law with `hcr` *proved* |
+
+Built on Mathlib's genuine `ProbabilityTheory.covariance` / `.variance`: the only remaining
+inputs are `cov[T,S] = 1` (regularity/unbiasedness) and `Var[S] = q·I₁` (Fisher information
+as score variance) — precisely the standard Cramér–Rao regularity conditions, now genuine
+measure-theoretic quantities rather than an assumed bound.
 
 ## Bound 2 — cost identifiability and observation bias (`OdLean/Bias.lean`)
 
@@ -79,6 +99,11 @@ linear algebra of the interaction subspace.
 'OD.bias_decomposition'       depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.bias_cancels_separable'   depends on axioms: [propext, Classical.choice, Quot.sound]
 'OD.bias_attenuation'         depends on axioms: [propext, Classical.choice, Quot.sound]
+-- Cramér–Rao step
+'OD.cramer_rao_inner'                          depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.covariance_sq_le_variance_mul_variance'    depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.cramer_rao_variance'                       depends on axioms: [propext, Classical.choice, Quot.sound]
+'OD.var_ge_q_inv_of_score'                     depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 Only the three standard Lean axioms — **no `sorryAx`**.
@@ -117,6 +142,11 @@ Toolchain: Lean `v4.31.0` (see `lean-toolchain`), Mathlib pinned in `lake-manife
   genuine sample-complexity rate for entropic optimal transport (Genevay,
   Mena–Niles-Weed) — analytic, beyond current Mathlib. This is the analogue of
   `sbf-lean`'s pending Theorem 2 (concentration) / Theorem 3 (Berry–Esseen).
+- The *regularity conditions* feeding `cramer_rao_variance` — the unit score covariance
+  `cov[T,S] = 1` (differentiation under the integral) and the Fisher information realised as
+  the score variance `Var[S] = q·I₁` — are taken as hypotheses. They are the standard
+  Cramér–Rao regularity assumptions; deriving them from the GBFS likelihood is a modelling
+  step, not a gap in the deductive chain.
 
 ## Sibling
 
