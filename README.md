@@ -83,6 +83,19 @@ linear algebra of the interaction subspace.
 
 Only the three standard Lean axioms — **no `sorryAx`**.
 
+## Independent cross-check (SymPy)
+
+`verification/cross_check.py` re-derives the same closed-form algebra in a computer-algebra
+system, independently of Lean. The scalar information laws (Bound 1) are checked fully
+symbolically; the centring/projection and bias-decomposition identities (Bound 2) are
+checked on an `N × N` matrix of *symbols*, so each assertion is a genuine polynomial
+identity, not a numeric coincidence. A surviving error would have to corrupt both a
+Mathlib-checked proof and a SymPy run in the same direction.
+
+```bash
+python3 verification/cross_check.py   # deps: sympy
+```
+
 ## Build
 
 ```bash
